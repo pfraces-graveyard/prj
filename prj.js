@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 require('shelljs/global');
 var optimist = require('optimist')
     .usage('Initialize a git repository with github mirror')
@@ -12,9 +13,14 @@ var optimist = require('optimist')
       demand: true
     })
     .option('o', {
-      describe: 'Remote repository owner',
       alias: 'owner',
-      demand:true
+      describe: 'Remote repository owner',
+      demand: true
+    })
+    .option('d', {
+      alias: 'desc',
+      describe: 'Project description',
+      demand: true
     }),
     argv = optimist.argv;
 
@@ -45,6 +51,10 @@ var createRemoteRepo = function () {
        '-d \'{"name":"' + argv.repo + '"}\'');
 };
 
+var createReadme = function () {
+  echo('# ' + argv.repo + '\n' + argv.desc).to('README.md');
+};
+
 var createLocalRepo = function () {
   var repo = argv.repo,
       owner = argv.owner;
@@ -58,11 +68,12 @@ var createLocalRepo = function () {
   cd(repo);
 
   exec('git init');
-  echo('# ' + repo).to('README.md');
+  createReadme();
   exec('git add .');
   exec('git commit -m "Initial commit"');
   exec('git remote add origin https://' + owner + '@github.com/' + owner +
       '/' + repo + '.git');
+
   exec('git push -u origin master');
 };
 
@@ -70,7 +81,7 @@ var createPackageJson = function () {
   var package = {
         name: argv.repo,
         version: argv.version || '0.1.0',
-        description: argv.desc || '',
+        description: argv.desc,
         main: argv.repo + '.js',
         bin: {},
         dependencies: {},
