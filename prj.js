@@ -55,28 +55,6 @@ var createReadme = function () {
   echo('# ' + argv.repo + '\n' + argv.desc).to('README.md');
 };
 
-var createLocalRepo = function () {
-  var repo = argv.repo,
-      owner = argv.owner;
-
-  if (test('-e', repo)) {
-    console.log('Path exists: ' + repo + ' exists');
-    exit(2);
-  }
-
-  mkdir(repo);
-  cd(repo);
-
-  exec('git init');
-  createReadme();
-  exec('git add .');
-  exec('git commit -m "Initial commit"');
-  exec('git remote add origin https://' + owner + '@github.com/' + owner +
-      '/' + repo + '.git');
-
-  exec('git push -u origin master');
-};
-
 var createPackageJson = function () {
   var package = {
         name: argv.repo,
@@ -97,6 +75,29 @@ var createPackageJson = function () {
   echo(JSON.stringify(package, null, 2)).to('package.json');
 };
 
+var createLocalRepo = function () {
+  var repo = argv.repo,
+      owner = argv.owner;
+
+  if (test('-e', repo)) {
+    console.log('Path exists: ' + repo + ' exists');
+    exit(2);
+  }
+
+  mkdir(repo);
+  cd(repo);
+  exec('git init');
+
+  createReadme();
+  createPackageJson();
+  exec('git add .');
+
+  exec('git commit -m "Initial commit"');
+  exec('git remote add origin https://' + owner + '@github.com/' + owner +
+      '/' + repo + '.git');
+
+  exec('git push -u origin master');
+};
+
 createRemoteRepo();
 createLocalRepo();
-createPackageJson();
