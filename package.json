@@ -1,0 +1,13 @@
+{
+  "name": "prj",
+  "version": "0.1.0",
+  "main": "prj.js",
+  "dependences": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pfraces/prj.git"
+  },
+  "keywords": [],
+  "author": "pfraces",
+  "license":"BSD"
+}
