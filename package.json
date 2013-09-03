@@ -1,12 +1,13 @@
 {
   "name": "prj",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "project management tool",
   "main": "prj.js",
   "bin" : {
     "prj": "./prj.js"
   },
   "dependencies": {
+    "optimist": "*",
     "shelljs": "*"
   },
   "repository": {
