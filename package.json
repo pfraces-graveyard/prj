@@ -1,7 +1,7 @@
 {
   "name": "prj",
-  "version": "0.1.4",
-  "description": "project management tool",
+  "version": "0.1.5",
+  "description": "Project management tool",
   "main": "prj.js",
   "bin" : {
     "prj": "./prj.js"

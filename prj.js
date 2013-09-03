@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 require('shelljs/global');
+
 var optimist = require('optimist')
     .usage('Initialize a git repository with github mirror')
     .option('h', {
@@ -47,6 +48,11 @@ deps(['curl', 'git']);
 // hasta pasar el passwd automaticamente
 
 var createRemoteRepo = function () {
+  exec('git clone https://' + argv.owner + '@github.com/' + argv.owner + '/' +
+       argv.repo + '.git');
+
+  if (!error()) exit();
+
   exec('curl -u ' + argv.owner + ' https://api.github.com/user/repos ' +
        '-d \'{"name":"' + argv.repo + '"}\'');
 };
