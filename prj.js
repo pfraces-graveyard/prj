@@ -69,10 +69,10 @@ var createLocalRepo = function () {
 var createPackageJson = function () {
   var package = {
         name: argv.repo,
-        version: '0.1.0',
-        description: argv.desc,
+        version: argv.version || '0.1.0',
+        description: argv.desc || '',
         main: argv.repo + '.js',
-        dependences: {},
+        dependencies: {},
         repository: {
           type: 'git',
           url: 'https://github.com/' + argv.owner + '/' + argv.repo + '.git'
@@ -82,7 +82,7 @@ var createPackageJson = function () {
         license: 'BSD'
       };
 
-  echo(JSON.stringify(package)).to('package.json');
+  echo(JSON.stringify(package, null, 2)).to('package.json');
 };
 
 createRemoteRepo();
