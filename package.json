@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "project management tool",
   "main": "prj.js",
+  "bin" : {
+    "prj": "./prj.js"
+  },
   "dependencies": {
     "shelljs": "*"
   },

@@ -72,6 +72,7 @@ var createPackageJson = function () {
         version: argv.version || '0.1.0',
         description: argv.desc || '',
         main: argv.repo + '.js',
+        bin: {},
         dependencies: {},
         repository: {
           type: 'git',
