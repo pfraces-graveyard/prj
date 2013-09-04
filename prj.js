@@ -51,7 +51,7 @@ var createRemoteRepo = function () {
   exec('git clone https://' + argv.owner + '@github.com/' + argv.owner + '/' +
        argv.repo + '.git');
 
-  if (!error()) exit();
+//  if (!error()) exit();
 
   exec('curl -u ' + argv.owner + ' https://api.github.com/user/repos ' +
        '-d \'{"name":"' + argv.repo + '"}\'');
