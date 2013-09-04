@@ -48,10 +48,11 @@ deps(['curl', 'git']);
 // hasta pasar el passwd automaticamente
 
 var createRemoteRepo = function () {
-  exec('git clone https://' + argv.owner + '@github.com/' + argv.owner + '/' +
-       argv.repo + '.git');
+  var err = exec('git clone https://' + argv.owner + '@github.com/' + 
+                 argv.owner + '/' + argv.repo + '.git')
+              .code;
 
-//  if (!error()) exit();
+  if (!err) exit();
 
   exec('curl -u ' + argv.owner + ' https://api.github.com/user/repos ' +
        '-d \'{"name":"' + argv.repo + '"}\'');
