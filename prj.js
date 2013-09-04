@@ -58,7 +58,7 @@ var createRemoteRepo = function () {
 };
 
 var createReadme = function () {
-  echo('# ' + argv.repo + '\n' + argv.desc).to('README.md');
+  echo('# ' + argv.repo + '\n' + argv.desc + '\n').to('README.md');
 };
 
 var createPackageJson = function () {
