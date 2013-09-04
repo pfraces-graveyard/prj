@@ -1,48 +1,51 @@
 #!/usr/bin/env node
 
-require('shelljs/global');
+var optimist = require('optimist'),
+    sh = require('shelljs'),
+    lib = require('./lib.js');
 
-var optimist = require('optimist')
-    .usage('Initialize a git repository with github mirror')
-    .option('h', {
-      alias: 'help',
-      describe: 'Show this help'
-    })
-    .option('r', {
-      alias: 'repo',
-      describe: 'Remote repository to sync with',
-      demand: true
-    })
-    .option('o', {
-      alias: 'owner',
-      describe: 'Remote repository owner',
-      demand: true
-    })
-    .option('d', {
-      alias: 'desc',
-      describe: 'Project description',
-      demand: true
-    }),
-    argv = optimist.argv;
+var arg = optimist
+  .usage('Initialize a git repository with github mirror')
+  .option('h', {
+    alias: 'help',
+    describe: 'Show this help'
+  })
+  .option('r', {
+    alias: 'repo',
+    describe: 'Remote repository to sync with',
+    demand: true
+  })
+  .option('o', {
+    alias: 'owner',
+    describe: 'Remote repository owner',
+    demand: true
+  })
+  .option('d', {
+    alias: 'desc',
+    describe: 'Project description',
+    demand: true
+  }).argv;
 
 if (argv.help) {
   optimist.showHelp();
-  exit();
+  sh.exit();
 }
 
+lib.deps(['curl', 'git']);
+
 var createRemoteRepo = function () {
-  var err = exec('git clone https://' + argv.owner + '@github.com/' + 
+  var err = sh.exec('git clone https://' + argv.owner + '@github.com/' + 
                  argv.owner + '/' + argv.repo + '.git')
               .code;
 
-  if (!err) exit();
+  if (!err) sh.exit();
 
-  exec('curl -u ' + argv.owner + ' https://api.github.com/user/repos ' +
+  sh.exec('curl -u ' + argv.owner + ' https://api.github.com/user/repos ' +
        '-d \'{"name":"' + argv.repo + '"}\'');
 };
 
 var createReadme = function () {
-  echo('# ' + argv.repo + '\n' + argv.desc + '\n').to('README.md');
+  sh.echo('# ' + argv.repo + '\n' + argv.desc + '\n').to('README.md');
 };
 
 var createPackageJson = function () {
@@ -62,31 +65,31 @@ var createPackageJson = function () {
         license: 'BSD'
       };
 
-  echo(JSON.stringify(package, null, 2)).to('package.json');
+  sh.echo(JSON.stringify(package, null, 2)).to('package.json');
 };
 
 var createLocalRepo = function () {
   var repo = argv.repo,
       owner = argv.owner;
 
-  if (test('-e', repo)) {
-    console.log('Path exists: ' + repo + ' exists');
-    exit(2);
+  if (sh.test('-e', repo)) {
+    sh.echo('Path exists: ' + repo + ' exists');
+    sh.exit(2);
   }
 
-  mkdir(repo);
-  cd(repo);
-  exec('git init');
+  sh.mkdir(repo);
+  sh.cd(repo);
+  sh.exec('git init');
 
   createReadme();
   createPackageJson();
-  exec('git add .');
+  sh.exec('git add .');
 
-  exec('git commit -m "Initial commit"');
-  exec('git remote add origin https://' + owner + '@github.com/' + owner +
-      '/' + repo + '.git');
+  sh.exec('git commit -m "Initial commit"');
+  sh.exec('git remote add origin https://' + owner + '@github.com/' + owner +
+          '/' + repo + '.git');
 
-  exec('git push -u origin master');
+  sh.exec('git push -u origin master');
 };
 
 createRemoteRepo();

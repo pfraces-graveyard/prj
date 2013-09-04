@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 var optimist = require('optimist'),
-    sh = require('shelljs'),
-    lib = require('./lib.js');
+    sh = require('shelljs');
 
 var arg = optimist
   .usage('Project management tool')
@@ -27,8 +26,6 @@ if (arg.help) {
   optimist.showHelp();
   sh.exit();
 }
-
-lib.deps(['curl', 'git']);
 
 var cmd = {
   name: '',
