@@ -6,7 +6,11 @@ Project management tool
 
 Initialize a git repository with github mirror
 
-    $ prj --init --owner pfraces --repo foo --desc 'my new project'
+    $ prj.js --init.user=pfraces --init.repo=foo
+
+Do work. Then commit and push the changes
+
+    $ prj.js --save 'commit msg'
 
 # Install
 

@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
-var optimist = require('optimist'),
-    sh = require('shelljs');
+var 
+  optimist = require('optimist'),
+  sh = require('shelljs'),
+  Init = require('./prj-init'),
+  Work = require('./prj-work');
 
 var arg = optimist
   .usage('Project management tool')
@@ -27,12 +30,23 @@ if (arg.help) {
   sh.exit();
 }
 
-var cmd = {
-  name: '',
-  args: process.argv.slice(3).join(' ')
-};
+if (arg.init) {
+  var prj = Init(arg.init);
 
-if (arg.init) cmd.name = 'init'
-else sh.exit();
+  if (!prj.clone()) {
+    prj.repo();
+    
+    sh.cd(arg.init.repo);
+    sh.echo(prj.manifest()).to('package.json');
+    sh.echo(prj.doc()).to('README.md');
 
-sh.exec('node ' + __dirname + '/prj-' + cmd.name + '.js ' + cmd.args);
+    prj.remote();
+    prj.link();
+
+    Work().save('auto generated');
+    Work().sync();
+  };
+} else if (arg.save) {
+  Work().save(arg.save);
+  Work().sync();
+}
