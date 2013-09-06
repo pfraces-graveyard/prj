@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-var 
-  optimist = require('optimist'),
+var optimist = require('optimist'),
   sh = require('shelljs'),
   Init = require('./prj-init'),
   work = require('./prj-work');
@@ -11,6 +10,10 @@ var arg = optimist
   .option('h', {
     alias: 'help',
     describe: 'Show this help'
+  })
+  .option('v', {
+    alias: 'version',
+    describe: 'Show version'
   })
   .option('i', {
     alias: 'init',
@@ -32,26 +35,29 @@ if (arg.help) {
 
 if (arg.init) {
   var init = Init(arg.init);
+  init.clone() && sh.exit();
 
-  if (!init.clone()) {
-    init.repo();
-    
-    sh.cd(arg.init.repo);
-    sh.echo(init.manifest()).to('package.json');
-    sh.echo(init.doc()).to('README.md');
+  init.repo();
+  
+  sh.cd(arg.init.repo);
+  sh.echo(init.manifest()).to('package.json');
+  sh.echo(init.doc()).to('README.md');
 
-    init.remote();
-    init.link();
+  init.remote();
+  init.link();
 
-    work.save('auto generated');
-    work.sync();
-  };
-} else if (arg.save) {
-  if (arg.save === '') {
-    console.log('empty commit msg. commit cancelled');
+  work.save('auto generated');
+  work.sync();
+  sh.exit();
+}
+
+if (arg.save) {
+  if (!arg.save.length) {
+    console.log('preventing commit: empty commit message');
     sh.exit(1);
   }
 
   work.save(arg.save);
   work.sync();
+  sh.exit();
 }
