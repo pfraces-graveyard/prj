@@ -4,7 +4,7 @@ var
   optimist = require('optimist'),
   sh = require('shelljs'),
   Init = require('./prj-init'),
-  Work = require('./prj-work');
+  work = require('./prj-work');
 
 var arg = optimist
   .usage('Project management tool')
@@ -31,22 +31,27 @@ if (arg.help) {
 }
 
 if (arg.init) {
-  var prj = Init(arg.init);
+  var init = Init(arg.init);
 
-  if (!prj.clone()) {
-    prj.repo();
+  if (!init.clone()) {
+    init.repo();
     
     sh.cd(arg.init.repo);
-    sh.echo(prj.manifest()).to('package.json');
-    sh.echo(prj.doc()).to('README.md');
+    sh.echo(init.manifest()).to('package.json');
+    sh.echo(init.doc()).to('README.md');
 
-    prj.remote();
-    prj.link();
+    init.remote();
+    init.link();
 
-    Work().save('auto generated');
-    Work().sync();
+    work.save('auto generated');
+    work.sync();
   };
 } else if (arg.save) {
-  Work().save(arg.save);
-  Work().sync();
+  if (arg.save === '') {
+    console.log('empty commit msg. commit cancelled');
+    sh.exit(1);
+  }
+
+  work.save(arg.save);
+  work.sync();
 }

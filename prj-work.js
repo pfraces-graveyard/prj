@@ -3,10 +3,7 @@ var sh = require('shelljs'),
 
 lib.deps(['git']);
 
-var Work = function (config) {
-  if (!(this instanceof Work)) return new Work(config);
-  this.config = config;
-};
+var Work = function () {};
 
 Work.prototype.save = function (msg) {
   sh.exec('git add .');
@@ -17,4 +14,4 @@ Work.prototype.sync = function () {
   return !sh.exec('git push -u origin master');
 };
 
-module.exports = Work;
+module.exports = new Work();
