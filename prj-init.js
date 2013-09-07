@@ -27,7 +27,7 @@ Init.prototype.remote = function () {
 };
 
 Init.prototype.doc = function () {
-  var doc = '# ' + this.config.repo + '\n' + this.config.desc + '\n';
+  var doc = '# ' + this.config.repo + '\n\n' + this.config.desc + '\n';
   return doc;
 };
 
