@@ -53,7 +53,7 @@ if (arg.init) {
 
 if (arg.save) {
   if (!arg.save.length) {
-    console.log('preventing commit: empty commit message');
+    console.log('Aborting commit due to empty commit message.');
     sh.exit(1);
   }
 
